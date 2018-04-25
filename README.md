@@ -2,7 +2,7 @@
 
 Are you trying to figure out how to use Juniper with Rocket?
 
-I created this repo because at the time of writing (2018-03-28), the [Juniper book](http://juniper.graphql.rs/) section on Rocket is yet to be written and I found the (example in Juniper Rocket)[https://github.com/graphql-rust/juniper/tree/master/juniper_rocket/examples] to not work for me.
+I created this repo because at the time of writing (2018-03-28), the [Juniper book](http://juniper.graphql.rs/) section on Rocket is yet to be written and I found the [example in Juniper Rocket](https://github.com/graphql-rust/juniper/tree/master/juniper_rocket/examples) to not work for me.
 
 I hope this changes in the future.
 

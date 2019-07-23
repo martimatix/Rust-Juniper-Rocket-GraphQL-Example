@@ -1,4 +1,4 @@
-use model::{Character, Database, Droid, Episode, Human};
+use crate::model::{Character, Database, Droid, Episode, Human};
 
 use juniper::Context;
 

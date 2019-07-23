@@ -1,5 +1,4 @@
-#![feature(plugin)]
-#![plugin(rocket_codegen)]
+#![feature(proc_macro_hygiene, decl_macro)]
 #[macro_use]
 
 extern crate juniper;
@@ -12,17 +11,17 @@ mod schema;
 use rocket::response::content;
 use rocket::State;
 
-use model::Database;
 use juniper::{EmptyMutation, RootNode};
+use model::Database;
 
 type Schema = RootNode<'static, Database, EmptyMutation<Database>>;
 
-#[get("/")]
+#[rocket::get("/")]
 fn graphiql() -> content::Html<String> {
     juniper_rocket::graphiql_source("/graphql")
 }
 
-#[get("/graphql?<request>")]
+#[rocket::get("/graphql?<request>")]
 fn get_graphql_handler(
     context: State<Database>,
     request: juniper_rocket::GraphQLRequest,
@@ -31,7 +30,7 @@ fn get_graphql_handler(
     request.execute(&schema, &context)
 }
 
-#[post("/graphql", data = "<request>")]
+#[rocket::post("/graphql", data = "<request>")]
 fn post_graphql_handler(
     context: State<Database>,
     request: juniper_rocket::GraphQLRequest,
@@ -49,7 +48,7 @@ fn main() {
         ))
         .mount(
             "/",
-            routes![graphiql, get_graphql_handler, post_graphql_handler],
+            rocket::routes![graphiql, get_graphql_handler, post_graphql_handler],
         )
         .launch();
 }

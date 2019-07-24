@@ -95,52 +95,28 @@ impl<'a> &'a dyn Droid {
     }
 }
 
-// pub struct Query;
-//
-// #[juniper::object(
-//     Context = Database,
-//     Scalar = juniper::DefaultScalarValue,
-// )]
-// /// The root query object of the schema
-// impl Query {
-//     #[graphql(arguments(id(description = "id of the human")))]
-//     fn human(database: &Database, id: String) -> Option<&dyn Human> {
-//         database.get_human(&id)
-//     }
-//
-//     #[graphql(arguments(id(description = "id of the droid")))]
-//     fn droid(database: &Database, id: String) -> Option<&dyn Droid> {
-//         database.get_droid(&id)
-//     }
-//
-//     #[graphql(arguments(episode(
-//         description = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode"
-//     )))]
-//     fn hero(database: &Database, episode: Option<Episode>) -> Option<&dyn Character> {
-//         Some(database.get_hero(episode).as_character())
-//     }
-// }
+pub struct Query;
 
-graphql_object!(Database: Database as "Query" |&self| {
-    description: "The root query object of the schema"
-
-    field human(
-        id: String as "id of the human"
-    ) -> Option<&dyn Human> {
-        self.get_human(&id)
+#[juniper::object(
+    Context = Database,
+    Scalar = juniper::DefaultScalarValue,
+)]
+/// The root query object of the schema
+impl Query {
+    #[graphql(arguments(id(description = "id of the human")))]
+    fn human(database: &Database, id: String) -> Option<&dyn Human> {
+        database.get_human(&id)
     }
 
-    field droid(
-        id: String as "id of the droid"
-    ) -> Option<&dyn Droid> {
-        self.get_droid(&id)
+    #[graphql(arguments(id(description = "id of the droid")))]
+    fn droid(database: &Database, id: String) -> Option<&dyn Droid> {
+        database.get_droid(&id)
     }
 
-    field hero(
-        episode: Option<Episode> as
-        "If omitted, returns the hero of the whole saga. If provided, returns \
-        the hero of that particular episode"
-    ) -> Option<&dyn Character> {
-        Some(self.get_hero(episode).as_character())
+    #[graphql(arguments(episode(
+        description = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode"
+    )))]
+    fn hero(database: &Database, episode: Option<Episode>) -> Option<&dyn Character> {
+        Some(database.get_hero(episode).as_character())
     }
-});
+}

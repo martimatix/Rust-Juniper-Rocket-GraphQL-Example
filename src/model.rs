@@ -1,5 +1,3 @@
-#![allow(missing_docs)]
-
 use std::collections::HashMap;
 
 #[derive(GraphQLEnum, Copy, Clone, Eq, PartialEq, Debug)]
@@ -16,7 +14,7 @@ pub trait Character {
     fn friend_ids(&self) -> &[String];
     fn appears_in(&self) -> &[Episode];
     fn secret_backstory(&self) -> &Option<String>;
-    fn as_character(&self) -> &Character;
+    fn as_character(&self) -> &dyn Character;
 }
 
 pub trait Human: Character {
@@ -61,7 +59,7 @@ impl Character for HumanData {
     fn secret_backstory(&self) -> &Option<String> {
         &self.secret_backstory
     }
-    fn as_character(&self) -> &Character {
+    fn as_character(&self) -> &dyn Character {
         self
     }
 }
@@ -88,7 +86,7 @@ impl Character for DroidData {
     fn secret_backstory(&self) -> &Option<String> {
         &self.secret_backstory
     }
-    fn as_character(&self) -> &Character {
+    fn as_character(&self) -> &dyn Character {
         self
     }
 }
@@ -247,7 +245,7 @@ impl Database {
         }
     }
 
-    pub fn get_hero(&self, episode: Option<Episode>) -> &Character {
+    pub fn get_hero(&self, episode: Option<Episode>) -> &dyn Character {
         if episode == Some(Episode::Empire) {
             self.get_human("1000").unwrap().as_character()
         } else {
@@ -255,15 +253,15 @@ impl Database {
         }
     }
 
-    pub fn get_human(&self, id: &str) -> Option<&Human> {
-        self.humans.get(id).map(|h| h as &Human)
+    pub fn get_human(&self, id: &str) -> Option<&dyn Human> {
+        self.humans.get(id).map(|h| h as &dyn Human)
     }
 
-    pub fn get_droid(&self, id: &str) -> Option<&Droid> {
-        self.droids.get(id).map(|d| d as &Droid)
+    pub fn get_droid(&self, id: &str) -> Option<&dyn Droid> {
+        self.droids.get(id).map(|d| d as &dyn Droid)
     }
 
-    pub fn get_character(&self, id: &str) -> Option<&Character> {
+    pub fn get_character(&self, id: &str) -> Option<&dyn Character> {
         if let Some(h) = self.humans.get(id) {
             Some(h)
         } else if let Some(d) = self.droids.get(id) {
@@ -273,7 +271,7 @@ impl Database {
         }
     }
 
-    pub fn get_friends(&self, c: &Character) -> Vec<&Character> {
+    pub fn get_friends(&self, c: &dyn Character) -> Vec<&dyn Character> {
         c.friend_ids()
             .iter()
             .flat_map(|id| self.get_character(id))

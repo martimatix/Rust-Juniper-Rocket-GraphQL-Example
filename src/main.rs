@@ -1,19 +1,16 @@
 #![feature(proc_macro_hygiene, decl_macro)]
-#[macro_use]
 
+#[macro_use]
 extern crate juniper;
-extern crate juniper_rocket;
-extern crate rocket;
 
 mod model;
 mod schema;
 
-use rocket::response::content;
-use rocket::State;
-
-use crate::schema::Query;
 use juniper::{EmptyMutation, RootNode};
 use model::Database;
+use rocket::response::content;
+use rocket::State;
+use schema::Query;
 
 type Schema = RootNode<'static, Query, EmptyMutation<Database>>;
 
